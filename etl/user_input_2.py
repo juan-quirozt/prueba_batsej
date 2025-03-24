@@ -56,32 +56,42 @@ def seleccionar_empresas():
     print("1. Todas las empresas Inactivas")
     print("2. Seleccionar una empresa")
     print("3. Seleccionar varias empresas")
+    
+    while True:
+        opcion = input("Ingrese una opción (0-3): ").strip()
+        if opcion == "0":
+            selected_commerce_ids = obtener_comercios_por_estado("Active")
+        elif opcion == "1":
+            selected_commerce_ids = obtener_comercios_por_estado("Inactive")
+        elif opcion == "2":
+            comercios = obtener_todos_los_comercios()
+            print("\nLista de empresas:")
+            for idx, (commerce_id, name) in enumerate(comercios):
+                print(f"{idx}. {name}")
+            while True:    
+                seleccion = input("\nSeleccione el número de la empresa: ").strip()
+                if seleccion not in [str(x) for x in list(range(len(comercios)))]:
+                    print("Elige un número de empresa válido")
+                    continue
+                selected_commerce_ids = [comercios[int(seleccion)][0]]
+                break  
+        elif opcion == "3":
+            comercios = obtener_todos_los_comercios()
+            print("\nLista de empresas:")
+            for idx, (commerce_id, name) in enumerate(comercios):
+                print(f"{idx}. {name}")
+            while True:
+                indices = input("\nIngrese los números de las empresas separadas por espacio: ").strip()
+                if not all(x in [str(x) for x in list(range(len(comercios)))] for x in indices.split(' ')):
+                    print("Ingrese una cadena válida de empresas")
+                    continue
+                selected_commerce_ids = [comercios[int(i)][0] for i in indices.split(" ")]
+                break
+        else:
+            print("Opción no válida. Intente de nuevo.")
+            continue
 
-    opcion = input("Ingrese una opción (0-3): ").strip()
-
-    if opcion == "0":
-        selected_commerce_ids = obtener_comercios_por_estado("Active")
-    elif opcion == "1":
-        selected_commerce_ids = obtener_comercios_por_estado("Inactive")
-    elif opcion == "2":
-        comercios = obtener_todos_los_comercios()
-        print("\nLista de empresas:")
-        for idx, (commerce_id, name) in enumerate(comercios):
-            print(f"{idx}. {name}")
-        seleccion = int(input("\nSeleccione el número de la empresa: ").strip())
-        selected_commerce_ids = [comercios[seleccion][0]]
-    elif opcion == "3":
-        comercios = obtener_todos_los_comercios()
-        print("\nLista de empresas:")
-        for idx, (commerce_id, name) in enumerate(comercios):
-            print(f"{idx}. {name}")
-        indices = input("\nIngrese los números de las empresas separadas por comas: ").strip()
-        selected_commerce_ids = [comercios[int(i)][0] for i in indices.split(",")]
-    else:
-        print("❌ Opción no válida. Intente de nuevo.")
-        return seleccionar_empresas()
-
-    return selected_commerce_ids
+        return selected_commerce_ids
 
 
 def filtrar_por_fecha(selected_commerce_ids):
@@ -98,11 +108,11 @@ def filtrar_por_fecha(selected_commerce_ids):
         >>> empresas = ["empresa_A_id", "empresa_B_id"]
         >>> df = filtrar_por_fecha(empresas)
         Seleccione el rango de fecha:
-        0. Año/Mes
-        1. Año
+        0. anio/Mes
+        1. anio
         2. Todo el histórico
         Ingrese una opción (0-2): 0
-        Ingrese el año (YYYY): 2024
+        Ingrese el anio (YYYY): 2024
         Ingrese el mes (MM): 03
         >>> print(df.head())
                date_api_call        commerce_id   ask_status    is_related
@@ -111,42 +121,70 @@ def filtrar_por_fecha(selected_commerce_ids):
             2  2024-03-12 08:20:16  empresa_A_id  Unsuccessful  1.0
     """
     print("\nSeleccione el rango de fecha:")
-    print("0. Año/Mes")
-    print("1. Año")
+    print("0. anio/Mes")
+    print("1. anio")
     print("2. Todo el histórico")
 
-    opcion = input("Ingrese una opción (0-2): ").strip()
+    while True:
+        opcion = input("Ingrese una opción (0-2): ").strip()
 
-    if opcion == "0":
-        año = input("Ingrese el año (YYYY): ").strip()
-        mes = input("Ingrese el mes (MM): ").strip()
-        query = """
-            SELECT * FROM apicall
-            WHERE commerce_id IN ({})
-            AND strftime('%Y', date_api_call) = ?
-            AND strftime('%m', date_api_call) = ?
-        """.format(",".join("?" * len(selected_commerce_ids)))
-        params = selected_commerce_ids + [año, mes]
+        if opcion == "0":
+            while True:
+                anio = input("Ingrese el anio (YYYY): ").strip()
+                mes = input("Ingrese el mes (MM): ").strip()
+                if len(mes) == 1:
+                    mes = '0' + mes
+                try:
+                    anio_aux = int(anio)
+                    mes_aux = int(mes)
+                    if anio_aux < 0 or mes_aux not in list(range(1, 13)):
+                        raise Exception()
+                except:
+                    print("El año no es válido")
+                    continue
+                
+                query = """
+                    SELECT * FROM apicall
+                    WHERE commerce_id IN ({})
+                    AND strftime('%Y', date_api_call) = ?
+                    AND strftime('%m', date_api_call) = ?
+                """.format(",".join("?" * len(selected_commerce_ids)))
+                params = selected_commerce_ids + [anio, mes]
+                break
+            break
 
-    elif opcion == "1":
-        año = input("Ingrese el año (YYYY): ").strip()
-        query = """
-            SELECT * FROM apicall
-            WHERE commerce_id IN ({})
-            AND strftime('%Y', date_api_call) = ?
-        """.format(",".join("?" * len(selected_commerce_ids)))
-        params = selected_commerce_ids + [año]
+        elif opcion == "1":
+            while True:
+                anio = input("Ingrese el anio (YYYY): ").strip()
+                try:
+                    anio_aux = int(anio)
+                    if anio_aux < 0:
+                        raise Exception()
+                except:
+                    print("El año no es válido")
+                    continue
 
-    elif opcion == "2":
-        query = """
-            SELECT * FROM apicall
-            WHERE commerce_id IN ({})
-        """.format(",".join("?" * len(selected_commerce_ids)))
-        params = selected_commerce_ids
+                query = """
+                    SELECT * FROM apicall
+                    WHERE commerce_id IN ({})
+                    AND strftime('%Y', date_api_call) = ?
+                """.format(",".join("?" * len(selected_commerce_ids)))
+                params = selected_commerce_ids + [anio]
+                break
+            break
 
-    else:
-        print("❌ Opción no válida. Intente de nuevo.")
-        return filtrar_por_fecha(selected_commerce_ids)
+        elif opcion == "2":
+            query = """
+                SELECT * FROM apicall
+                WHERE commerce_id IN ({})
+            """.format(",".join("?" * len(selected_commerce_ids)))
+            params = selected_commerce_ids
+            break
+
+        else:
+            print("Opción no válida. Intente de nuevo.")
+            continue
+
 
     conn = conectar_db()
     df = pd.read_sql_query(query, conn, params=params)
