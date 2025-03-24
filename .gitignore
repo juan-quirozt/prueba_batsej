@@ -4,4 +4,4 @@
 
 # Ignorar la carpeta del entorno virtual
 venv/
-__pycache__*
+etl/__pycache__/
