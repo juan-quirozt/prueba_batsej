@@ -1,7 +1,7 @@
-# Ignorar archivos de bases de datos SQLite
-*.sqlite
-*.sqlite3
-
 # Ignorar la carpeta del entorno virtual
 venv/
 etl/__pycache__/
+
+# Ignorar archivos de entorno
+.env
+.env*

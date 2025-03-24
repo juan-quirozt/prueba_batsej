@@ -19,7 +19,7 @@ Fecha: 23 de marzo de 2025
 import sqlite3
 import pandas as pd
 
-DATABASE_PATH = r"D:/batsej_open_company/data/database.sqlite"
+DATABASE_PATH = r"data/database.sqlite"
 
 def conectar_db():
     """Establece conexión con la base de datos SQLite."""
