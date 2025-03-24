@@ -14,7 +14,7 @@ def agrupar_datos(df):
     # Renombrar columnas para mayor claridad
     df_grouped = df_grouped.rename(columns={"Successful": "Success_Count", "Unsuccessful": "Unsuccess_Count"}).reset_index()
 
-    return df_grouped
+    return df_grouped.sort_values(by=['commerce_id', 'year_month'], ascending=[True, True])
 
 def calcular_facturacion(llamados_exitosos, tarifas):
     suma = 0

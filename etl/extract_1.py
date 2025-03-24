@@ -81,3 +81,21 @@ def obtener_contrato_no_exitoso():
     df = pd.DataFrame(contratos, columns=column_names)
 
     return df
+
+def obtener_info_comercios():
+    """Obtiene la informacion de todos los comercios de los llamados no exitosos y los devuelve como un DataFrame"""
+    query = "SELECT * FROM commerce"
+    conn = conectar_db()
+    cursor = conn.cursor()
+    # Ejecutar la consulta
+    cursor.execute(query)
+    # Obtener los nombres de las columnas
+    column_names = [desc[0] for desc in cursor.description]
+    # Obtener los datos
+    comercios = cursor.fetchall()
+    # Cerrar conexión
+    conn.close()
+    # Convertir a DataFrame
+    df = pd.DataFrame(comercios, columns=column_names)
+
+    return df
