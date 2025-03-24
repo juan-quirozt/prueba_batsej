@@ -1,5 +1,6 @@
 import pandas as pd
 from collections import namedtuple
+from etl.extract_1 import obtener_contrato_exitoso, obtener_contrato_no_exitoso
 
 def agrupar_datos(df):
     """Agrupa el DataFrame por Año-Mes y Empresa, contando los 'Successful' y 'Unsuccessful'."""
@@ -67,9 +68,12 @@ def calcular_descuento(llamados_no_exitosos, descuentos):
 
 
 ## Facturacion
-def generar_facturacion(df_agrupado, df_contract_success, df_contract_unsuccess):
+def generar_facturacion(df_agrupado):
     """Genera el DataFrame de facturación basado en las tarifas de cada empresa."""
     
+    df_contract_success = obtener_contrato_exitoso()
+    df_contract_unsuccess = obtener_contrato_no_exitoso()
+
     # Obtener tarifas por empresa
     descuentos = obtener_descuentos_por_empresa(df_contract_unsuccess)
     tarifas_por_empresa = obtener_tarifas_por_empresa(df_contract_success)

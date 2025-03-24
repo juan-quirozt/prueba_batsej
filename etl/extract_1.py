@@ -44,3 +44,40 @@ def obtener_todos_los_comercios():
     comercios = cursor.fetchall()
     conn.close()
     return comercios
+
+def obtener_contrato_exitoso():
+    """Obtiene los contratos de los comercios de los llamados exitosos y los devuelve como un DataFrame"""
+    query = "SELECT * FROM contract_success"
+    conn = conectar_db()
+    cursor = conn.cursor()
+    # Ejecutar la consulta
+    cursor.execute(query)
+    # Obtener los nombres de las columnas
+    column_names = [desc[0] for desc in cursor.description]
+    # Obtener los datos
+    contratos = cursor.fetchall()
+    # Cerrar conexión
+    conn.close()
+
+    # Convertir a DataFrame
+    df = pd.DataFrame(contratos, columns=column_names)
+
+    return df
+
+def obtener_contrato_no_exitoso():
+    """Obtiene los contratos de los comercios de los llamados no exitosos y los devuelve como un DataFrame"""
+    query = "SELECT * FROM contract_unsuccess"
+    conn = conectar_db()
+    cursor = conn.cursor()
+    # Ejecutar la consulta
+    cursor.execute(query)
+    # Obtener los nombres de las columnas
+    column_names = [desc[0] for desc in cursor.description]
+    # Obtener los datos
+    contratos = cursor.fetchall()
+    # Cerrar conexión
+    conn.close()
+    # Convertir a DataFrame
+    df = pd.DataFrame(contratos, columns=column_names)
+
+    return df

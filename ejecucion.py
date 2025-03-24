@@ -4,12 +4,6 @@ from etl.transform_3 import agrupar_datos, generar_facturacion
 from collections import namedtuple
 import pandas as pd
 
-from etl.crear_contrato_exi import crear_exitosos
-from etl.crear_contrato_no_exi import crear_no_exitosos
-
-df_contract_success = crear_exitosos()
-df_contract_unsuccess = crear_no_exitosos()
-
 Tarifa = namedtuple("Tarifa", ["valor", "limite"])
 Descuento = namedtuple("Descuento", ["valor", "limite"])
 
@@ -24,7 +18,7 @@ df_agrupado = agrupar_datos(df_filtrado)
 print("\n📌 DataFrame Agrupado:")
 print(df_agrupado.sort_values(by=['commerce_id', 'year_month'], ascending=[True, False]))
 
-df_factura = generar_facturacion(df_agrupado, df_contract_success, df_contract_unsuccess)
+df_factura = generar_facturacion(df_agrupado)
 print("\n📌 DataFrame de Facturación:", df_factura)
 
 df_factura.to_excel('factura.xlsx', index=False)
