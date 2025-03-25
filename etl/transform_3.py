@@ -3,7 +3,43 @@ from collections import namedtuple
 from etl.extract_1 import obtener_contrato_exitoso, obtener_contrato_no_exitoso
 
 def agrupar_datos(df):
-    """Agrupa el DataFrame por Año-Mes y Empresa, contando los 'Successful' y 'Unsuccessful'."""
+    """
+    Agrupa el DataFrame por Año-Mes y Empresa, contando los estados 'Successful' y 'Unsuccessful'.
+
+    Esta función agrega una columna 'year_month' que representa el año y mes de cada registro, 
+    luego agrupa los datos por 'year_month' y 'commerce_id', contando la cantidad de veces que 
+    aparecen los valores 'Successful' y 'Unsuccessful' en la columna 'ask_status'. Finalmente, 
+    ordena los resultados por 'commerce_id' y 'year_month' en orden ascendente.
+
+    Params:
+        df (pd.DataFrame): DataFrame con las siguientes columnas necesarias:
+            - 'date_api_call' (datetime): Fecha de la llamada API.
+            - 'commerce_id' (str): Identificador de la empresa.
+            - 'ask_status' (str): Estado de la llamada, puede ser 'Successful' o 'Unsuccessful'.
+
+    Returns:
+        pd.DataFrame: DataFrame con las siguientes columnas:
+            - 'year_month' (str): Año y mes en formato 'YYYY-MM'.
+            - 'commerce_id' (str): Identificador de la empresa.
+            - 'Success_Count' (int): Cantidad de llamadas exitosas ('Successful').
+            - 'Unsuccess_Count' (int): Cantidad de llamadas fallidas ('Unsuccessful').
+
+    Example:
+        >>> import pandas as pd
+        >>> data = {
+        ...     "date_api_call": ["2024-03-15", "2024-03-20", "2024-04-10", "2024-03-18", "2024-04-15"],
+        ...     "commerce_id": ["empresa_A", "empresa_A", "empresa_A", "empresa_B", "empresa_B"],
+        ...     "ask_status": ["Successful", "Unsuccessful", "Successful", "Successful", "Unsuccessful"]
+        ... }
+        >>> df = pd.DataFrame(data)
+        >>> df_grouped = agrupar_datos(df)
+        >>> print(df_grouped)
+           year_month commerce_id  Success_Count  Unsuccess_Count
+        0    2024-03  empresa_A              1                1
+        1    2024-04  empresa_A              1                0
+        2    2024-03  empresa_B              1                0
+        3    2024-04  empresa_B              0                1
+    """
     
     # Agregar columna de Año-Mes
     df["year_month"] = pd.to_datetime(df["date_api_call"]).dt.strftime("%Y-%m")
