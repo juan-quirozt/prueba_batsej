@@ -91,11 +91,11 @@ def calcular_facturacion(llamados_exitosos, tarifas):
 
     Example:
         >>> class Tarifa:
-        ...     def __init__(self, limite, valor):
+        ...     def __init__(self, valor, limite):
         ...         self.limite = limite
         ...         self.valor = valor
         ...
-        >>> tarifas = [Tarifa(100, 0.5), Tarifa(200, 0.3), Tarifa(500, 0.2)]
+        >>> tarifas = [Tarifa(0.2, 500), Tarifa(0.5, 100), Tarifa(0.3, 200)]
         >>> calcular_facturacion(250, tarifas)
         40.0
     """
