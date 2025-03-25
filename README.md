@@ -49,3 +49,47 @@ pytest
 # O alternativamente
 python -m unittest discover
 ```
+
+### **Manejo de Cobros y Descuentos**
+Para manejar los contratos de las empresas sin modificar el código
+cuando una nueva empresa es añadida, se ha optado por crear dos nuevas tablas.
+
+Se crea un registro por cada rango a cobrar o realizar descuento.
+Ejemplo:
+
+| commerce_id         | price_success | min_limit_success |
+|---------------------|--------------|-------------------|
+| Vj9W-c4Pm-ja0X-fC1C | 250          | 0                 |
+| Vj9W-c4Pm-ja0X-fC1C | 200          | 10000             |
+| Vj9W-c4Pm-ja0X-fC1C | 170          | 20000             |
+
+Esto se traduce en que la empresa tiene tres tarifas:
+
+* En (0, 10000): se cobra a 250
+* En (10000, 20000): se cobra 200
+* Para valores mayores a 20000 se sobra a 170
+
+Si la empresa tiene una única condición de cobro el límite inferior es cero.
+
+| commerce_id         | price_success | min_limit_success |
+| KaSn-4LHo-m6vC-I4PU | 300          | 0                 |
+
+
+`contract_success`: Contiene las condiciones de los cobros por llamados exitosos
+
+Columnas:
+* `commerce_id`: Indicador único de cada empresa
+* `price_success`: Tarifa que se debe cobrar en el rango (se incluye el límite inferior)
+* `min_limit_success`: Límite inferior del rango para el cual aplica la tarifa
+
+
+`contract_unsuccess`: Contiene las condiciones de los descuentos por llamados no exitosos
+
+Columnas:
+* `commerce_id`: Indicador único de cada empresa
+* `discount_unsuccess`: Descuento porcentual que se debe aplicar en el rango (se incluye el límite inferior)
+* `min_limit_success`: Límite inferior del rango para el cual aplica el descuento
+
+A continuación se presenta un diagrama Entidad-Relación que describe la estructura de la Base de Datos:
+
+![diagrama E-R](diagrama.jpg)
