@@ -72,6 +72,7 @@ Esto se traduce en que la empresa tiene tres tarifas:
 Si la empresa tiene una única condición de cobro el límite inferior es cero.
 
 | commerce_id         | price_success | min_limit_success |
+|---------------------|--------------|-------------------|
 | KaSn-4LHo-m6vC-I4PU | 300          | 0                 |
 
 
