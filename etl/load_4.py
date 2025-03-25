@@ -1,6 +1,7 @@
 import win32com.client as client
 from etl.extract_1 import obtener_info_comercios
 from datetime import datetime
+import os
 
 ## Merge para facturacion
 
@@ -49,5 +50,5 @@ def enviar_correo():
     #mail.Save()
     #time.sleep(3)  # Espera 3 segundos antes de enviar
 
-    mail.Attachments.Add(r"D:/batsej_open_company/Factura_ordenada.xlsx")
+    mail.Attachments.Add(rf"{os.getcwd()}\resultados\Factura_ordenada.xlsx")
     mail.Send()

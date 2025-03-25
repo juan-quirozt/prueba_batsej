@@ -5,3 +5,6 @@ etl/__pycache__/
 # Ignorar archivos de entorno
 .env
 .env*
+
+# Archivos de excel
+*.xlsx

@@ -4,6 +4,7 @@ from etl.transform_3 import agrupar_datos, generar_facturacion
 from etl.load_4 import cruzar_facturacion, enviar_correo
 from collections import namedtuple
 import pandas as pd
+import os
 
 Tarifa = namedtuple("Tarifa", ["valor", "limite"])
 Descuento = namedtuple("Descuento", ["valor", "limite"])
@@ -23,11 +24,10 @@ def main():
     df_factura_ordenada = cruzar_facturacion(df_factura)
 
     # Exportar la factura a xlsx
-    df_factura_ordenada.to_excel('Factura_ordenada.xlsx', index=False)
+    df_factura_ordenada.to_excel(rf'{os.getcwd()}\resultados\Factura_ordenada.xlsx', index=False)
 
     # Enviar correo
     enviar_correo()
-
 
 if __name__ == "__main__":
     main()
