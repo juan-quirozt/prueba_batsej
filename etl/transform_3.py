@@ -1,3 +1,24 @@
+"""
+Módulo ETL para el procesamiento de datos de llamadas API y facturación.
+
+Este módulo proporciona funciones para agrupar y analizar datos de llamadas API,
+calcular costos de facturación basados en tarifas escalonadas, y organizar tarifas
+y descuentos por empresa.
+
+Funciones:
+    - agrupar_datos(df): Agrupa y cuenta llamadas exitosas y no exitosas por mes y empresa.
+    - calcular_facturacion(llamados_exitosos, tarifas): Calcula el costo de facturación basado en tarifas escalonadas.
+    - obtener_tarifas_por_empresa(df): Organiza tarifas por empresa en base a límites de éxito.
+    - obtener_descuentos_por_empresa(df): Organiza descuentos por empresa según límites de llamadas no exitosas.
+
+Estructuras de Datos:
+    - Tarifa: NamedTuple con 'valor' (precio por éxito) y 'limite' (mínimo para aplicar la tarifa).
+    - Descuento: NamedTuple con 'valor' (porcentaje de descuento) y 'limite' (mínimo de llamadas no exitosas para aplicar el descuento).
+
+Autor: Juan Esteban Quiroz Taborda
+Última modificación: 24 de marzo de 2025
+"""
+
 import pandas as pd
 from collections import namedtuple
 from etl.extract_1 import obtener_contrato_exitoso, obtener_contrato_no_exitoso

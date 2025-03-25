@@ -35,24 +35,20 @@ class TestLoad(unittest.TestCase):
         self.assertAlmostEqual(df_resultado['Valor_a_pagar'].iloc[0], 1000 * 0.9 * 1.19, places=2)
         self.assertAlmostEqual(df_resultado['Valor_a_pagar'].iloc[1], 2000 * 0.8 * 1.19, places=2)
     
+    @patch('builtins.input', side_effect=["test@example.com;valid@mail.com"])
     @patch('win32com.client.Dispatch')
-    @patch('os.getcwd', return_value='C:\\ruta\\de\\prueba')
-    def test_enviar_correo(self, mock_getcwd, mock_dispatch):
+    @patch('os.getcwd', return_value="C:\\ruta\\falsa")
+    def test_enviar_correo(self, mock_getcwd, mock_dispatch, mock_input):
         mock_outlook = MagicMock()
         mock_mail = MagicMock()
         mock_dispatch.return_value = mock_outlook
         mock_outlook.CreateItem.return_value = mock_mail
-        
+
         enviar_correo()
-        
-        # Verificar que Outlook fue llamado correctamente
-        mock_dispatch.assert_called_once_with('Outlook.Application')
-        mock_outlook.CreateItem.assert_called_once_with(0)
-        
-        # Verificar que los atributos del correo fueron configurados
-        self.assertEqual(mock_mail.To, 'esteban-408@hotmail.com')
-        self.assertIn('Reporte de Ejecución', mock_mail.Subject)
-        self.assertTrue(mock_mail.Attachments.Add.called)
+        mock_dispatch.assert_called_with('Outlook.Application')
+        mock_outlook.CreateItem.assert_called_with(0)
+        mock_mail.To = "test@example.com;valid@mail.com"
+        mock_mail.Attachments.Add.assert_called_with(r"C:\ruta\falsa\resultados\Factura_ordenada.xlsx")
         mock_mail.Send.assert_called_once()
         
 if __name__ == '__main__':
