@@ -20,8 +20,7 @@ def main():
 
     df_factura_ordenada = cruzar_facturacion(df_factura)
 
-    fecha = datetime.now().replace(microsecond=0).strftime("%Y-%m-%d_%H-%M-%S")
-    nombre_factura = f'Factura_ordenada_{fecha}.xlsx'
+    nombre_factura = 'Factura_ordenada.xlsx'
 
     # Exportar la factura a xlsx
     df_factura_ordenada.to_excel(rf'{os.getcwd()}\resultados\{nombre_factura}', index=False)
