@@ -42,3 +42,10 @@ venv/Scripts/activate
 pip install -r requirements.txt
 python ejecucion.py
 ```
+
+Para ejecutar los test ejecutar el siguiente comando
+```bash
+pytest
+# O alternativamente
+python -m unittest discover
+```
