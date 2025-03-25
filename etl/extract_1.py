@@ -99,3 +99,23 @@ def obtener_info_comercios():
     df = pd.DataFrame(comercios, columns=column_names)
 
     return df
+
+def obtener_anios():
+    """Obtiene los años en los que se han realizado llamadas a la API"""
+    query = """SELECT DISTINCT strftime('%Y', date_api_call) AS year_available FROM apicall ORDER BY year_available"""
+    conn = conectar_db()
+    cursor = conn.cursor()
+    cursor.execute(query)
+    years = [row[0] for row in cursor.fetchall()]
+    conn.close()
+    return years
+
+def obtener_meses(year):
+    """Obtiene los meses en los que se han realizado llamadas a la API para un año específico"""
+    query = """SELECT DISTINCT strftime('%m', date_api_call) AS month_available FROM apicall WHERE strftime('%Y', date_api_call) = ? ORDER BY month_available"""
+    conn = conectar_db()
+    cursor = conn.cursor()
+    cursor.execute(query, (year,))
+    months = [row[0] for row in cursor.fetchall()]
+    conn.close()
+    return months

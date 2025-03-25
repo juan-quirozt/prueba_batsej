@@ -24,7 +24,7 @@ Autor: Juan Esteban Quiroz Taborda
 """
 
 
-from etl.extract_1 import conectar_db, obtener_comercios_por_estado, obtener_todos_los_comercios
+from etl.extract_1 import conectar_db, obtener_comercios_por_estado, obtener_todos_los_comercios, obtener_anios, obtener_meses
 import pandas as pd
 
 def seleccionar_empresas():
@@ -129,18 +129,17 @@ def filtrar_por_fecha(selected_commerce_ids):
         opcion = input("Ingrese una opción (0-2): ").strip()
 
         if opcion == "0":
+            anios = obtener_anios()
             while True:
                 anio = input("Ingrese el anio (YYYY): ").strip()
                 mes = input("Ingrese el mes (MM): ").strip()
                 if len(mes) == 1:
                     mes = '0' + mes
                 try:
-                    anio_aux = int(anio)
-                    mes_aux = int(mes)
-                    if anio_aux < 0 or mes_aux not in list(range(1, 13)):
+                    if anio not in anios or mes not in obtener_meses(anio):
                         raise Exception()
                 except:
-                    print("El año no es válido")
+                    print("El año o el mes no es válido")
                     continue
                 
                 query = """
@@ -154,11 +153,11 @@ def filtrar_por_fecha(selected_commerce_ids):
             break
 
         elif opcion == "1":
+            anios = obtener_anios()
             while True:
                 anio = input("Ingrese el anio (YYYY): ").strip()
                 try:
-                    anio_aux = int(anio)
-                    if anio_aux < 0:
+                    if anio not in anios:
                         raise Exception()
                 except:
                     print("El año no es válido")
